@@ -60,9 +60,13 @@ licensecheck:
                exit 1; \
        fi
 
+# Requires to install spectral. See https://github.com/stoplightio/spectral
+oas-lint:
+	spectral lint api/*.yaml
+
 # Run all the linters
 .PHONY: lint
-lint: licensecheck go-lint
+lint: licensecheck go-lint oas-lint
 
 # generates CRD using controller-gen
 .PHONY: crd
@@ -156,3 +160,8 @@ release.prod: test
 .PHONY: ko
 ko:
 	scripts/install-ko.sh
+
+# generate-flags-documentation: Generate documentation (docs/flags.md)
+.PHONE: generate-flags-documentation
+generate-flags-documentation:
+	go run internal/gen/docs/flags/main.go
