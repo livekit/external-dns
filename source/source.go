@@ -29,7 +29,7 @@ import (
 	"time"
 	"unicode"
 
-	sprig "github.com/go-task/slim-sprig"
+	sprig "github.com/go-task/slim-sprig/v3"
 	log "github.com/sirupsen/logrus"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
