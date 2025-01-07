@@ -269,6 +269,25 @@ func suitableType(target string) string {
 	return endpoint.RecordTypeCNAME
 }
 
+// isIPv6String reports whether the target string is an IPv6 address,
+// including IPv4-mapped IPv6 addresses.
+func isIPv6String(target string) bool {
+	netIP, err := netip.ParseAddr(target)
+	if err != nil {
+		return false
+	}
+	return netIP.Is6()
+}
+
+// isIPv4String reports whether the target string is an IPv4 address.
+func isIPv4String(target string) bool {
+	netIP, err := netip.ParseAddr(target)
+	if err != nil {
+		return false
+	}
+	return netIP.Is4()
+}
+
 // endpointsForHostname returns the endpoint objects for each host-target combination.
 func endpointsForHostname(hostname string, targets endpoint.Targets, ttl endpoint.TTL, providerSpecific endpoint.ProviderSpecific, setIdentifier string, resource string) []*endpoint.Endpoint {
 	var endpoints []*endpoint.Endpoint
@@ -384,15 +403,4 @@ func waitForDynamicCacheSync(ctx context.Context, factory dynamicInformerFactory
 		}
 	}
 	return nil
-}
-
-// isIPv6String returns if ip is IPv6.
-func isIPv6String(ip string) bool {
-	netIP := net.ParseIP(ip)
-	return netIP != nil && netIP.To4() == nil
-}
-
-func isIPv4String(input string) bool {
-	netIP := net.ParseIP(input)
-	return netIP != nil && netIP.To4() != nil && !strings.Contains(input, ":")
 }
