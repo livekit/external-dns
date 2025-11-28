@@ -143,6 +143,7 @@ func (l Labels) Serialize(withQuotes bool, txtEncryptEnabled bool, aesKey []byte
 		var err error
 		encryptionNonce, err = GenerateNonce()
 		if err != nil {
+			log.SetReportCaller(true)
 			log.Fatalf("Failed to generate cryptographic nonce %#v.", err)
 		}
 		l[txtEncryptionNonce] = string(encryptionNonce)
@@ -154,6 +155,7 @@ func (l Labels) Serialize(withQuotes bool, txtEncryptEnabled bool, aesKey []byte
 	text, err = EncryptText(text, aesKey, encryptionNonce)
 
 	if err != nil {
+		log.SetReportCaller(true)
 		log.Fatalf("Failed to encrypt the text %#v using the encryption key %#v. Got error %#v.", text, aesKey, err)
 	}
 

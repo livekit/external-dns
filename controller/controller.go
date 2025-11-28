@@ -361,6 +361,7 @@ func (c *Controller) Run(ctx context.Context) {
 				if errors.Is(err, provider.SoftError) {
 					log.Errorf("Failed to do run once: %v", err)
 				} else {
+					log.SetReportCaller(true)
 					log.Fatalf("Failed to do run once: %v", err)
 				}
 			}

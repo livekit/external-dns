@@ -18,6 +18,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 	"os"
@@ -165,6 +166,7 @@ func main() {
 		}(),
 	}, cfg.Sources, sourceCfg)
 	if err != nil {
+		log.SetReportCaller(true)
 		log.Fatal(err)
 	}
 
@@ -359,6 +361,7 @@ func main() {
 		log.Fatalf("unknown dns provider: %s", cfg.Provider)
 	}
 	if err != nil {
+		log.SetReportCaller(true)
 		log.Fatal(err)
 	}
 
@@ -397,6 +400,7 @@ func main() {
 	}
 
 	if err != nil {
+		log.SetReportCaller(true)
 		log.Fatal(err)
 	}
 
@@ -417,9 +421,12 @@ func main() {
 	}
 
 	if cfg.Once {
-		err := ctrl.RunOnce(ctx)
-		if err != nil {
-			log.Fatal(err)
+		if err := ctrl.RunOnce(ctx); err != nil {
+			if errors.Is(err, provider.SoftError) {
+				log.Errorf("Failed to do run once: %v", err)
+			} else {
+				log.Fatalf("Failed to do run once: %v", err)
+			}
 		}
 
 		os.Exit(0)

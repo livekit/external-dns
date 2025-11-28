@@ -133,6 +133,7 @@ func StartHTTPApi(provider provider.Provider, startedChan chan struct{}, readTim
 
 	l, err := net.Listen("tcp", providerPort)
 	if err != nil {
+		log.SetReportCaller(true)
 		log.Fatal(err)
 	}
 
@@ -141,6 +142,7 @@ func StartHTTPApi(provider provider.Provider, startedChan chan struct{}, readTim
 	}
 
 	if err := s.Serve(l); err != nil {
+		log.SetReportCaller(true)
 		log.Fatal(err)
 	}
 }
